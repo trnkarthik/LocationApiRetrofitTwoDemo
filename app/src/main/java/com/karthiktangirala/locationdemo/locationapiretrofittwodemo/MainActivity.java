@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         if (menu != null) {
-            MenuItem retorfitItem = menu.findItem(R.id.http);
-            retorfitItem.setVisible(false);
+            MenuItem retrofitItem = menu.findItem(R.id.retorfit);
+            retrofitItem.setVisible(false);
         }
         return true;
     }
