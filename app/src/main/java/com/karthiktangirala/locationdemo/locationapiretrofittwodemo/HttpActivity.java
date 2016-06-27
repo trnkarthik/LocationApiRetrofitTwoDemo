@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -28,13 +27,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.widget.Toast.makeText;
 
 public class HttpActivity extends AppCompatActivity {
 
-
-    private EditText searchBox;
-    private ListView listView;
+    @BindView(R.id.search_box)
+    EditText searchBox;
+    @BindView(R.id.list)
+    ListView listView;
 
     private ListAdapter adapter;
     private List<String> list;
@@ -43,30 +47,12 @@ public class HttpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http);
-
-        searchBox = (EditText) findViewById(R.id.search_box);
-        listView = (ListView) findViewById(R.id.list);
-        Button goButton = (Button) findViewById(R.id.go);
+        ButterKnife.bind(this);
 
         list = new ArrayList<>();
         adapter = new ListAdapter(this, 0, list);
 
         listView.setAdapter(adapter);
-
-        goButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = searchBox.getText().toString();
-                if (!text.isEmpty()) {
-                    if (isNetworkAvailable()) {
-                        new GetLocationsAsyncTask().execute(text);
-                    } else {
-                        makeText(getApplicationContext(), "No network connection!", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
     }
 
     /**
@@ -99,6 +85,18 @@ public class HttpActivity extends AppCompatActivity {
                 return false;
         }
         return true;
+    }
+
+    @OnClick(R.id.go)
+    void onGoButtonClick(View v) {
+        String text = searchBox.getText().toString();
+        if (!text.isEmpty()) {
+            if (isNetworkAvailable()) {
+                new GetLocationsAsyncTask().execute(text);
+            } else {
+                makeText(getApplicationContext(), "No network connection!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private class GetLocationsAsyncTask extends AsyncTask<String, Void, Locations> {
